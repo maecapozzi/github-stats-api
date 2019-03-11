@@ -38,15 +38,16 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3001/auth/github/callback"
+      callbackURL: "http://localhost:3000/auth/github/callback"
     },
-    function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function() {
-        // To keep the example simple, the user's GitHub profile is returned to
-        // represent the logged-in user.  In a typical application, you would want
-        // to associate the GitHub account with a user record in your database,
-        // and return that user instead.
-        return done(null, profile);
+    (accessToken, refreshToken, profile, done) => {
+      process.nextTick(() => {
+        let user = {
+          githubId: profile.id,
+          access_token: accessToken,
+          refresh_token: refreshToken
+        };
+        return done(null, user);
       });
     }
   )
@@ -76,7 +77,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
-// app.use("/login", loginRouter);
+app.use("/login", loginRouter);
 
 app.get("/login", function(req, res) {
   res.render("login", { user: req.user });
@@ -100,9 +101,22 @@ app.get(
   "/auth/github/callback",
   passport.authenticate("github", { failureRedirect: "/login" }),
   function(req, res) {
-    res.redirect("/");
+    res.redirect("http://localhost:3000");
   }
 );
+
+client.get("user", function(error, result) {
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+  console.log("GET result ->" + result);
+});
+
+app.get("/logout", function(req, res) {
+  req.logout();
+  res.redirect("/");
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
