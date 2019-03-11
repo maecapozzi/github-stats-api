@@ -1,22 +1,30 @@
 var express = require("express");
 var router = express.Router();
+const passport = require("passport");
+const { LocalStorage } = require("node-localstorage");
 
-/* GET users listing. */
 router.get("/", function(req, res, next) {
-  // Comment out this line:
-  //res.send('respond with a resource');
+  if (typeof localStorage === "undefined" || localStorage === null) {
+    localStorage = new LocalStorage("./accessToken");
+  }
 
-  // And insert something like this instead:
-  res.json([
-    {
-      id: 1,
-      username: "samsepi0l"
-    },
-    {
-      id: 2,
-      username: "D0loresH4ze"
-    }
-  ]);
+  var GitHubStrategy = require("passport-github").Strategy;
+
+  passport.use(
+    new GitHubStrategy(
+      {
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+      },
+      function(accessToken, refreshToken, profile, cb) {
+        localStorage.setItem("accessToken", accessToken);
+      }
+    )
+  );
+
+  const accessToken = localStorage.getItem("accessToken");
+  res.json({ accessToken });
 });
 
 module.exports = router;
