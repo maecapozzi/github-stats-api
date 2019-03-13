@@ -3,6 +3,7 @@ const { env } = require("../config/env");
 const { generateRandomString } = require("../helpers/generateRandomString");
 
 const buildUrl = (githubClientId, callbackUrl) => {
+  console.log(callbackUrl);
   return `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${callbackUrl}&scope=repo`;
 };
 

@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+console.log("hi");
+
 const env = {
   callbackUrl: process.env.CALLBACK_URL,
   githubClientId: process.env.GITHUB_CLIENT_ID,
