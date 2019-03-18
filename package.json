@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "redis-server && node app.js",
+    "start": "node app.js",
     "start:redis": "redis-server",
     "dev": "nodemon app.js"
   },
