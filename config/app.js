@@ -7,7 +7,10 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const env = require("./env");
 const redis = require("redis");
-const client = redis.createClient();
+const client =
+  process.env.NODE_ENV === "production"
+    ? require("redis").createClient(process.env.REDIS_URL)
+    : redis.createClient();
 const session = require("express-session");
 
 client.on("connect", function() {
