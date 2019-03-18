@@ -6,6 +6,17 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const env = require("./env");
+const redis = require("redis");
+const client = redis.createClient();
+const session = require("express-session");
+
+client.on("connect", function() {
+  console.log("Redis client connected");
+});
+
+client.on("error", function(err) {
+  console.log("Something went wrong " + err);
+});
 
 const defaultCallback = () => {};
 
@@ -21,4 +32,4 @@ const start = (port = env.port, router, callback = defaultCallback) => {
   });
 };
 
-module.exports = { start };
+module.exports = { start, client };
