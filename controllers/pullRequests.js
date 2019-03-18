@@ -20,7 +20,6 @@ const index = (req, res) => {
       }
     })
       .then(response => {
-        console.log(response);
         const { pullRequests, issues } = response.data.data.repository;
         return res.status(200).json({ pullRequests, issues });
       })
