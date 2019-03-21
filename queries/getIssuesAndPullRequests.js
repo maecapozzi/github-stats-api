@@ -34,6 +34,7 @@ const GET_ISSUES_AND_PULL_REQUESTS = (owner, name) => {
           title
           bodyHTML
           url
+          closedAt
           labels(first: 5) {
             edges {
               node {
