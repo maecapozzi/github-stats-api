@@ -47,7 +47,7 @@ const generateAccessToken = (req, res) => {
 const logout = (req, res) => {
   client.del("accessToken");
 
-  res.redirect("/");
+  res.send(302).redirect("/");
 };
 
 module.exports = { authenticateWithGithub, generateAccessToken, logout };

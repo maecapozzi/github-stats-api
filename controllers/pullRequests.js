@@ -20,8 +20,16 @@ const index = (req, res) => {
       }
     })
       .then(response => {
-        const { pullRequests, issues } = response.data.data.repository;
-        return res.status(200).json({ pullRequests, issues });
+        if (response.data.errors) {
+          response.data.errors.map(err => {
+            if (err.type === "NOT_FOUND") {
+              return res.status(500).json({ message: err.message });
+            }
+          });
+        } else {
+          const { pullRequests, issues } = response.data.data.repository;
+          return res.status(200).json({ pullRequests, issues });
+        }
       })
       .catch(err => {
         console.log(err);
